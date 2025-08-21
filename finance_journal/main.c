@@ -5,6 +5,13 @@
 #include <conio.h>
 #include "HEAD.h"
 
+extern int menu(int select);
+extern INCOMEANDEXPENSES inputAdd(INCOMEANDEXPENSES add);
+extern void inputRetouch(INCOMEANDEXPENSES add);
+extern void statistics(INCOMEANDEXPENSES add);
+extern void checkRecord(INCOMEANDEXPENSES add);
+extern int saveRecord(INCOMEANDEXPENSES records[]);
+
 int main()
 {
 	run();
@@ -14,7 +21,7 @@ int main()
 
 void run()
 {
-	ADD add = { 0 };
+	INCOMEANDEXPENSES add = { 0 };
 	int select = 0;
 
 	while (1)
@@ -36,296 +43,10 @@ void run()
 			checkRecord(add);
 			break;
 		default:
-			return 0;
+			return;
 		}
 	}
 	
 	return;
 }
 
-int menu(int select)
-{
-	printf("\n-------------------MENU--------------------\n");
-	printf("1. 수입/지출 추가\n");
-	printf("2. 수입/지출 수정\n");
-	printf("3. 월별 수입/지출 통계\n");
-	printf("4. 수입/지출 내역\n");
-	printf("-------------------------------------------\n");
-	printf("0 입력 시 종료: ");
-	if (scanf("%d", &select) != 1)
-	{
-		select = 0;
-	}
-	return select;
-}
-
-ADD inputAdd(ADD add)
-{
-	FILE* fp;
-	fopen_s(&fp, "C:/Users/otter/Desktop/record.txt", "a");
-	if (fp == NULL)
-	{
-		printf("파일 열기 실패\n");
-		return add;
-	}
-
-	fseek(fp, 0, SEEK_END);
-	long size = ftell(fp);
-	if (size == 0)
-	{
-		fprintf(fp, "%s\t%10s\t%10s\t%20s\n", "날짜", "카테고리", "금액", "메모\n");
-	}
-
-	int answer = 0;
-
-	do
-	{
-		printf("\n날짜(1월 1일->1 1 으로 입력): ");
-		scanf("%d %d", &add.date.month, &add.date.day);
-
-		int type = 0;
-
-		do
-		{
-			printf("\n수입: 고정, 변동, 기타\n지출: 생활비, 금융/의무, 여가/자기계발, 기타\n해당되는 카테고리 입력: ");
-			scanf(" %[^\n]", add.type);
-
-			if (strcmp(add.type, "고정") == 0 || strcmp(add.type, "변동") == 0 ||
-				strcmp(add.type, "기타") == 0 || strcmp(add.type, "생활비") == 0 ||
-				strcmp(add.type, "금융/의무") == 0 || strcmp(add.type, "여가/자기계발") == 0)
-			{
-				type = 1;
-			}
-			else {
-				printf("올바른 카테고리를 입력하세요.");
-				type = 0;
-			}
-
-
-		} while (type == 0);
-
-		int pm = 1;
-
-		do
-		{
-			printf("\n수입/지출(수입/지출->+/- n 으로 입력): ");
-			scanf(" %c %d", &add.pm, &add.money);
-
-			if ((strcmp(add.type, "고정") == 0 || strcmp(add.type, "변동") || strcmp(add.type, "기타") == 0) && add.pm == '-')
-			{
-				printf("수입/지출 내역이 카테고리와 일치하지 않습니다.\n");
-				pm = 0;
-			}
-			else if ((strcmp(add.type, "생활비") == 0 || strcmp(add.type, "금융/의무") == 0 ||
-				strcmp(add.type, "여가/자기계발") == 0 || strcmp(add.type, "기타") == 0) && add.pm == '+')
-			{
-				printf("수입/지출 내역이 카테고리와 일치하지 않습니다.\n");
-				pm = 0;
-			}
-			else
-			{
-				pm = 1;
-			}
-
-		} while (pm == 0);
-		printf("\n기타 메모할 것 입력: ");
-		scanf(" %[^\n]", add.etc);
-
-		printf("\n%s\t%10s\t%10s\t%20s\n", "날짜", "카테고리", "금액", "메모");
-		printf("\n'%02d/%02d\t%10s\t%10c%d\t%20s'\n라고 저장할까요? (y/n)\n",
-			add.date.month, add.date.day, add.type, add.pm, add.money, add.etc);
-		do
-		{
-			answer = _getch();
-			if (answer == 'Y' || answer == 'y')
-			{
-				answer = 1;
-				break;
-			}
-			else if (answer != 'N' && answer != 'n')
-			{
-				printf("올바른 입력이 아닙니다. 다시 입력하세요.\n");
-			}
-			else
-			{
-				answer = 0;
-				break;
-			}
-		} while (1);
-	} while (answer == 0);
-
-	fprintf(fp, "%02d/%02d\t%10s\t%10c%d\t%20s\n",
-		add.date.month, add.date.day, add.type, add.pm, add.money, add.etc);
-
-	fclose(fp);
-	return add;
-}
-
-void inputRetouch(ADD add)
-{
-	ADD records[MAX_RECORDS];
-	int count = saveRecord(records);
-
-	if (count == 0)
-	{
-		printf("수정할 데이터가 없습니다.\n");
-		return;
-	}
-
-	int month, day;
-	printf("\n수정할 날짜 입력 (월 일): ");
-	scanf("%d %d", &month, &day);
-
-	int found[100], fcount = 0;
-	for (int i = 0; i < count; i++)
-	{
-		if (records[i].date.month == month && records[i].date.day == day)
-		{
-			printf("[%d] %02d/%02d %s %c%d %s\n",
-				fcount + 1,
-				records[i].date.month, records[i].date.day,
-				records[i].type, records[i].pm,
-				records[i].money, records[i].etc);
-			found[fcount++] = i;
-		}
-	}
-
-	if (fcount == 0)
-	{
-		printf("해당 날짜에 데이터가 없습니다.\n");
-		return;
-	}
-
-	int select;
-	printf("수정할 번호 선택: ");
-	scanf("%d", &select);
-
-	if (select < 1 || select > fcount)
-	{
-		printf("잘못된 선택입니다.\n");
-		return;
-	}
-
-	int idx = found[select - 1];
-	printf("(수입: 고정, 변동, 기타)\n(지출: 생활비, 금융/의무, 여가/자기계발, 기타)\n새 카테고리 입력: ");
-
-	int ftype = 0;
-	do
-	{
-		scanf(" %[^\n]", records[idx].type);
-		if (strcmp(records[idx].type, "고정") == 0 || strcmp(records[idx].type, "변동") == 0 ||
-			strcmp(records[idx].type, "기타") == 0 || strcmp(records[idx].type, "생활비") == 0 ||
-			strcmp(records[idx].type, "금융/의무") == 0 || strcmp(records[idx].type, "여가/자기계발") == 0)
-		{
-			printf("올바른 카테고리를 입력하세요.");
-			ftype = 1;
-		}
-	} while (ftype == 0);
-
-	printf("새 수입/지출(+/- n): ");
-
-	int fpm = 0;
-	do
-	{
-		scanf(" %c %d", &records[idx].pm, &records[idx].money);
-
-		if ((strcmp(records[idx].type, "고정") == 0 || strcmp(records[idx].type, "변동") || strcmp(records[idx].type, "기타") == 0) && records[idx].pm == '-')
-		{
-			printf("수입/지출 내역이 카테고리와 일치하지 않습니다.\n");
-			fpm = 0;
-		}
-		else if ((strcmp(records[idx].type, "생활비") == 0 || strcmp(records[idx].type, "금융/의무") == 0 ||
-			strcmp(records[idx].type, "여가/자기계발") == 0 || strcmp(records[idx].type, "기타") == 0) && records[idx].pm == '+')
-		{
-			printf("수입/지출 내역이 카테고리와 일치하지 않습니다.\n");
-			fpm = 0;
-		}
-		else
-		{
-			fpm = 1;
-		}
-	} while (fpm == 0);
-	printf("새 메모 입력: ");
-	scanf(" %[^\n]", records[idx].etc);
-
-	FILE* fp;
-	fopen_s(&fp, "C:/Users/otter/Desktop/record.txt", "w");
-	if (fp == NULL)
-	{
-		printf("파일 열기 실패\n");
-		return;
-	}
-
-	fprintf(fp, "%s\t%10s\t%10s\t%10s\n", "날짜", "카테고리", "금액", "메모");
-	for (int i = 0; i < count; i++)
-	{
-		fprintf(fp, "%02d/%02d\t%10s\t%10c%d\t%20s\n",
-			records[i].date.month, records[i].date.day,
-			records[i].type, records[i].pm,
-			records[i].money, records[i].etc);
-	}
-	fclose(fp);
-
-	printf("수정 완료.\n");
-
-	return;
-}
-
-void statistics(ADD add)
-{
-	ADD records[MAX_RECORDS];
-	int count = saveRecord(records);
-	
-	return;
-}
-
-void checkRecord(ADD add)
-{
-	ADD records[MAX_RECORDS];
-	int count = saveRecord(records);
-
-	printf("%s\t%10s\t%10s\t%10s\n", "날짜", "카테고리", "금액", "메모");
-	for (int i = 0; i < count; i++)
-	{
-		printf("%02d/%02d\t%10s\t%10c%d\t%20s\n",
-			records[i].date.month, records[i].date.day,
-			records[i].type, records[i].pm,
-			records[i].money, records[i].etc);
-	}
-
-	return;
-}
-
-int saveRecord(ADD records[])
-{
-	FILE* fp;
-	fopen_s(&fp, "C:/Users/otter/Desktop/record.txt", "r");
-	if (fp == NULL)
-	{
-		printf("파일 열기 실패\n");
-		return 0;
-	}
-
-	int count = 0;
-	char line[200];
-	fgets(line, sizeof(line), fp); //헤더 건너뛰기
-
-	while (fgets(line, sizeof(line), fp) && count < MAX_RECORDS)
-	{
-		line[strcspn(line, "\n")] = 0;
-
-		if (sscanf(line, "%d/%d %s %c%d %[^\n]",
-			&records[count].date.month,
-			&records[count].date.day,
-			records[count].type,
-			&records[count].pm,
-			&records[count].money,
-			records[count].etc) == 6)
-		{
-			count++;
-		}
-	}
-	fclose(fp);
-
-	return count;
-}

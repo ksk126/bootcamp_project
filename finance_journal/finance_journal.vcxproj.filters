@@ -13,9 +13,27 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="소스 파일\income_expenses">
+      <UniqueIdentifier>{de78d842-5663-44c6-9fec-267cca4ae413}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.c">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="check_and_save.c">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="add.c">
+      <Filter>소스 파일\income_expenses</Filter>
+    </ClCompile>
+    <ClCompile Include="retouch.c">
+      <Filter>소스 파일\income_expenses</Filter>
+    </ClCompile>
+    <ClCompile Include="statistics.c">
+      <Filter>소스 파일\income_expenses</Filter>
+    </ClCompile>
+    <ClCompile Include="menu.c">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
