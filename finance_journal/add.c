@@ -57,20 +57,19 @@ INCOMEANDEXPENSES inputAdd(INCOMEANDEXPENSES add)
 			printf("\n수입/지출(수입/지출->+/- n 으로 입력): ");
 			scanf(" %c %d", &add.pm, &add.money);
 
-			if ((strcmp(add.type, "고정") == 0 || strcmp(add.type, "변동") || strcmp(add.type, "기타") == 0) && add.pm == '-')
+			if ((strcmp(add.type, "고정") == 0 || strcmp(add.type, "변동") || strcmp(add.type, "기타") == 0) && add.pm == '+')
 			{
-				printf("수입/지출 내역이 카테고리와 일치하지 않습니다.\n");
-				pm = 0;
+				pm = 1;
 			}
 			else if ((strcmp(add.type, "생활비") == 0 || strcmp(add.type, "금융/의무") == 0 ||
-				strcmp(add.type, "여가/자기계발") == 0 || strcmp(add.type, "기타") == 0) && add.pm == '+')
+				strcmp(add.type, "여가/자기계발") == 0 || strcmp(add.type, "기타") == 0) && add.pm == '-')
 			{
-				printf("수입/지출 내역이 카테고리와 일치하지 않습니다.\n");
-				pm = 0;
+				pm = 1;
 			}
 			else
 			{
-				pm = 1;
+				printf("수입/지출 내역이 카테고리와 일치하지 않습니다.\n");
+				pm = 0;
 			}
 
 		} while (pm == 0);

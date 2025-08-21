@@ -21,9 +21,6 @@
     <ClCompile Include="main.c">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="check_and_save.c">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="add.c">
       <Filter>소스 파일\income_expenses</Filter>
     </ClCompile>
@@ -35,6 +32,9 @@
     </ClCompile>
     <ClCompile Include="menu.c">
       <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="check_and_save.c">
+      <Filter>소스 파일\income_expenses</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -55,3 +55,21 @@ int saveRecord(INCOMEANDEXPENSES records[])
 
 	return count;
 }
+
+int filterByMonth(INCOMEANDEXPENSES filtered[], int month)
+{
+	INCOMEANDEXPENSES allRecords[MAX_RECORDS];
+	int total = saveRecord(allRecords);
+	int count = 0;
+
+	for (int i = 0; i < total; i++)
+	{
+		if (allRecords[i].date.month == month)
+		{
+			filtered[count++] = allRecords[i];
+		}
+	}
+
+	return count;
+
+}

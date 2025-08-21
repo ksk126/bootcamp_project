@@ -33,6 +33,11 @@ typedef struct category {
 	EXPENSES expenses;
 } CATEGORY;
 
+typedef struct money {
+	int INmoney;
+	int EXmoney;
+} MONEY;
+
 //프로그램 실행 루프
 void run();
 //메뉴 출력, 선택한 번호 반환
@@ -45,5 +50,11 @@ void inputRetouch(INCOMEANDEXPENSES add);
 void statistics(INCOMEANDEXPENSES add);
 //수입/지출 내역 보기
 void checkRecord(INCOMEANDEXPENSES add);
-//수입/지출 내역 구조체에 저장
+//수입/지출 내역 구조체배열에 저장
 int saveRecord(INCOMEANDEXPENSES records[]);
+//수입/지출 내역 구조체배열에 저장하되 원하는 월에 대한 내역만
+int filterByMonth(INCOMEANDEXPENSES filtered[], int month);
+
+/*records[i].date.month, records[i].date.day,
+			records[i].type, records[i].pm,
+			records[i].money, records[i].etc)*/
