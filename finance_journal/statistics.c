@@ -5,6 +5,8 @@
 #include <conio.h>
 #include "HEAD.h"
 
+extern int filterByMonth(INCOMEANDEXPENSES filtered[], int month);
+
 void statistics(INCOMEANDEXPENSES add)
 {
 	INCOMEANDEXPENSES filtered[MAX_RECORDS] = { 0 };
