@@ -54,7 +54,3 @@ void checkRecord(INCOMEANDEXPENSES add);
 int saveRecord(INCOMEANDEXPENSES records[]);
 //수입/지출 내역 구조체배열에 저장하되 원하는 월에 대한 내역만
 int filterByMonth(INCOMEANDEXPENSES filtered[], int month);
-
-/*records[i].date.month, records[i].date.day,
-			records[i].type, records[i].pm,
-			records[i].money, records[i].etc)*/

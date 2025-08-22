@@ -8,7 +8,7 @@
 INCOMEANDEXPENSES inputAdd(INCOMEANDEXPENSES add)
 {
 	FILE* fp;
-	fopen_s(&fp, "C:/Users/otter/Desktop/record.txt", "a");
+	fopen_s(&fp, "record.txt", "a");
 	if (fp == NULL)
 	{
 		printf("파일 열기 실패\n");
